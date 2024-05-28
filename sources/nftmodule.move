@@ -1,9 +1,9 @@
-module Suivents::NFTModule {
+module suivents::NFTModule {
     use sui::transfer;
     use sui::tx_context::{Self, TxContext};
-    use Suivents::EventModule::{Event};
+    use suivents::EventModule::{Event};
 
-    struct NFT has key, store {
+    public struct NFT has key, store {
         id: u64,
         owner: address,
         event_id: u64,
@@ -43,11 +43,11 @@ module Suivents::NFTModule {
     }
 
     // Define event structures for emission
-    struct NFTCheckedIn has drop {
+   public  struct NFTCheckedIn has drop {
         nft_id: u64,
     }
 
-    struct NFTAirdropped has drop {
+    public struct NFTAirdropped has drop {
         event_id: u64,
         recipients: vector<address>,
     }

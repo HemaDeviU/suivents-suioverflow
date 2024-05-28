@@ -1,9 +1,9 @@
-module Suivents::EventModule {
+module suivents::EventModule {
     use sui::transfer;
     use sui::tx_context::{Self, TxContext};
     use sui::event::Event;
 
-    struct Event has key, store {
+    public struct Event has key, store {
         id: u64,
         name: vector<u8>,
         start_date: u64,
@@ -16,7 +16,7 @@ module Suivents::EventModule {
         checked_in_users: vector<address>,
     }
 
-    struct User has key, store {
+    public struct User has key, store {
         id: address,
         name: vector<u8>,
         event_history: vector<u64>,

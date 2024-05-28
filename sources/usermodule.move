@@ -1,7 +1,7 @@
-module Suivents::UserModule {
+module suivents::UserModule {
     use sui::tx_context::{Self, TxContext};
 
-    struct UserProfile has key, store {
+    public struct UserProfile has key, store {
         id: address,
         name: vector<u8>,
         event_history: vector<u64>,
@@ -37,7 +37,7 @@ module Suivents::UserModule {
     }
 
     // Define event structures for emission
-    struct UserProfileUpdated has drop {
+    public struct UserProfileUpdated has drop {
         user_id: address,
         name: vector<u8>,
     }
