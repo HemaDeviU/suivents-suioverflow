@@ -32,6 +32,7 @@ module Suivents::EventModule {
         price_of_ticket: u64, 
         context: &mut TxContext
     ): Event {
+        let sender = TxContext::sender(context);
         let event_id = TxContext::generate_unique_id(context);
         let event = Event {
             id: event_id,
@@ -41,7 +42,7 @@ module Suivents::EventModule {
             timezone,
             location,
             price_of_ticket,
-            organizer: TxContext::sender(context),
+            organizer: sender,
             registered_users: vector::empty(),
             checked_in_users: vector::empty(),
         };
@@ -53,6 +54,7 @@ module Suivents::EventModule {
     // Register for an event
     public fun register_for_event(event: &mut Event, user: &mut User, context: &mut TxContext) {
         let sender = TxContext::sender(context);
+        assert!(!vector::contains(&event.registered_users, &sender), "User already registered");
         if event.price_of_ticket > 0 {
             transfer::transfer(event.price_of_ticket, sender, event.organizer);
         }
@@ -64,10 +66,28 @@ module Suivents::EventModule {
 
     // Check-in at the event
     public fun check_in(event: &mut Event, user: address, context: &mut TxContext) {
-        assert!(vector::contains(&event.registered_users, &user), 1);
+        assert!(vector::contains(&event.registered_users, &user), "User not registered");
+        assert!(!vector::contains(&event.checked_in_users, &user), "User already checked in");
         vector::push_back(&mut event.checked_in_users, user);
 
         Event::emit(EventCheckedIn { event_id: event.id, user });
+    }
+
+   
+    // Get registered users for an event
+    public fun get_registered_users(event: &Event, context: &TxContext): vector<address> {
+        assert!(TxContext::sender(context) == event.organizer, "Only organizer can view registered users");
+        event.registered_users
+    }
+
+    // Get paid users for an event
+    public fun get_paid_users(event: &Event, context: &TxContext): vector<address> {
+        assert!(TxContext::sender(context) == event.organizer, "Only organizer can view paid users");
+        if event.price_of_ticket > 0 {
+            event.registered_users
+        } else {
+            vector::empty()
+        }
     }
 
     // Define event structures for emission
