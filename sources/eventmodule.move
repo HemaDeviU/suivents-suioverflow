@@ -1,10 +1,9 @@
-module suivents::EventModule {
+/*module suivents::suivent {
     use sui::transfer;
     use sui::tx_context::{Self, TxContext};
-    use sui::event::Event;
 
-    public struct Event has key, store {
-        id: u64,
+    public struct suivent has key, store {
+        id: ID,
         name: vector<u8>,
         start_date: u64,
         end_date: u64,
@@ -16,11 +15,11 @@ module suivents::EventModule {
         checked_in_users: vector<address>,
     }
 
-    public struct User has key, store {
+   /* public struct User has key, store {
         id: address,
         name: vector<u8>,
         event_history: vector<u64>,
-    }
+    }*/
 
     // Create a new event
     public fun create_event(
@@ -51,7 +50,7 @@ module suivents::EventModule {
         event
     }
 
-    // Register for an event
+    /*/ Register for an event
     public fun register_for_event(event: &mut Event, user: &mut User, context: &mut TxContext) {
         let sender = TxContext::sender(context);
         assert!(!vector::contains(&event.registered_users, &sender), "User already registered");
@@ -103,5 +102,5 @@ module suivents::EventModule {
     struct EventCheckedIn has drop {
         event_id: u64,
         user: address,
-    }
+    }*/
 }

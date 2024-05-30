@@ -1,4 +1,4 @@
-module suivents::NFTModule {
+/*module suivents::NFTModule {
     use sui::transfer;
     use sui::tx_context::{Self, TxContext};
     use suivents::EventModule::{Event};

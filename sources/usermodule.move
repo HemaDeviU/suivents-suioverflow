@@ -1,4 +1,4 @@
-module suivents::UserModule {
+/*module suivents::UserModule {
     use sui::tx_context::{Self, TxContext};
 
     public struct UserProfile has key, store {
