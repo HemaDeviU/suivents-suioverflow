@@ -4,6 +4,7 @@ module suivents::suivent {
     use std::string::String;
     use sui::event;
     use sui::object::{Self,UID};
+    use sui::tx_context::TxContext;
    // use sui::nft::NFT;
 
 
@@ -86,33 +87,37 @@ module suivents::suivent {
     }
 
     // Function to register for an event
-   /* public fun register_for_event(
+   public fun register_for_event(
         user: &mut User,
         event_id: UID,
         name: String,
-        payment: Balance<Coin>,
+        payment: Balance<Coin<u64>>,
+        ctx: &mut TxContext
     ) {
-        let event = borrow_global_mut<Event>(event_id);
-        assert!(!vector::contains(&event.registered_guests, user), "User already registered");
-        
+        let event = borrow_global_mut<SEvent>(event_id);
+        let user_address = user.address;
+        assert!(!vector::contains(&event.registered_guests, user),1);
+        //1 is error code for "user already registered"
         if (event.price_of_ticket > 0) {
-            assert!(balance::value(payment) >= event.price_of_ticket, "Insufficient funds");
+            assert!(balance::value(payment) >= event.price_of_ticket,2);
+            //2 is error code for "insufficient funds"
             // Transfer payment to organiser
             coin::transfer(payment, event.organiser);
         }
         
-        let guest_id = object::new();
-        let guest = Guest {
+    let guest_id = object::new<Guest>(ctx);
+    let guest = Guest {
             id: guest_id,
-            user: User {
+            user: *user,
+            /*user: User {
                 id: object::new(),
                 address: user.address,
                 name,
                 event_history: vector::empty<UID>(),
-            },
+            },*/
             event_id,
             has_checked_in: false,
-            nft_ticket: nft::create("Ticket", "Dynamic NFT Ticket", ""),
+            //nft_ticket: nft::create("Ticket", "Dynamic NFT Ticket", ""),
         };
         
         vector::push_back(&mut event.registered_guests, guest);
@@ -120,7 +125,7 @@ module suivents::suivent {
     }
     
     // Function to whitelist guests
-    public fun whitelist_guests(event_id: UID, guest_addresses: vector<address>) {
+   /** public fun whitelist_guests(event_id: UID, guest_addresses: vector<address>) {
         let event = borrow_global_mut<Event>(event_id);
         for address in guest_addresses {
             let user = borrow_global<User>(address);
@@ -150,5 +155,5 @@ module suivents::suivent {
                 vector::push_back(&mut event.checked_in_guests, guest);
             }
         }
-    }*/
+    } */
 }
